@@ -1,1 +1,1 @@
-# na1337
+# Working towards automation of nanocad with python

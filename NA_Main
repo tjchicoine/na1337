@@ -1,36 +1,33 @@
 from tkinter import *
 import time
-from NA_Popup_Window import popupWindow
-import Functions as f
 
-class App:
+class Main_Window:
     def __init__(self,master):
         padding_x = 5
         padding_y = 5
         self.master = master
-        #self.master.geometry('400x1000+800+0')
 
         self.master.title("N.A 1.337")
         self.welcomemessage = Message(master,text = "NANOCAD AUTOFILLER 1.337",aspect=200,justify = CENTER).pack()
 
         #-------------------------Radiobutton Introduction---------------------#
-        var = self.var = StringVar()
-        self.var.set('1')
+        mode_str = self.mode_str = StringVar()
+        self.mode_str.set('1')
         MODES = [('Sequential','1'),
         ('Tag Names','2'),
         ('1 Row Same Text','3'),
         ('2 Row Input Text','4'),
         ('First Value + Suffix','5')]
         for text,mode in MODES:
-            self.R1 = Radiobutton(master,text = text,variable = self.var,value = mode,command=self.mode_select,justify=CENTER).pack(anchor=W,padx=(50,0))
+            self.R1 = Radiobutton(master,text = text,variable = self.mode_str,value = mode,command=self.mode_select,justify=CENTER).pack(anchor=W,padx=(50,0))
 
         #-------------------------Option Menu For Direction--------------------#
         self.direction_ex = Message(master,text = 'Select Direction of Input:',aspect=200,justify= CENTER)
         self.direction_ex.pack(anchor = CENTER,pady=(15,0))
         DIRECTION = ['DOWN','UP']
-        var1 = self.var1 = StringVar()
-        var1.set(DIRECTION[0])
-        option = OptionMenu(master,var1,*DIRECTION)
+        direction_mode = self.var1 = StringVar()
+        direction_mode.set(DIRECTION[0])
+        option = OptionMenu(master,direction_mode,*DIRECTION)
         option.pack()
 
         #----------------OPEN POPUP TO SET COORDINATES-------------------------#
@@ -134,7 +131,7 @@ class App:
             self.sequence3b.config(state='disabled')
 
     def get_filename(self):
-        from tkinter import filedialog
+        #from tkinter import filedialog
         import os
         path = filedialog.askopenfilename(initialdir = "C:/Users/tyler/Desktop/Scripts",title = "Select File", filetypes = (("text files","*.txt"),("all files","*.*")))
         path_string = os.path.join(path)
@@ -201,5 +198,5 @@ class App:
 
 if __name__ == '__main__':
     root = Tk()
-    app = App(root)
+    mw = Main_Window(root)
     root.mainloop()

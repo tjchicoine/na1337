@@ -1,8 +1,7 @@
 from tkinter import *
+import pyautogui
 import time
-from NA_Popup_Window import popupWindow
-import Functions as f
-
+#test 11111
 class App:
     def __init__(self,master):
         padding_x = 5
@@ -161,34 +160,34 @@ class App:
             else:
                 row_1_start = int(row_1_start)
                 row_1_end = int(row_1_end)
-                f.start()
-                f.sequential(row_1_start,row_1_end)
+                self.start()
+                self.sequential(row_1_start,row_1_end)
 
         if self.var.get() == '2': #TAG NAMES
-            f.start()
-            f.different_names()
+            self.start()
+            self.different_names()
 
         if self.var.get() == '3': #SINGLE ROW SAMETEXT
             row_1_start = int(self.sequence2a.get())
             row_1_end = int(self.sequence2b.get())
-            f.start()
-            f.by_row(row_1_start,row_1_end)
+            self.start()
+            self.by_row(row_1_start,row_1_end)
 
         if self.var.get() == '4': #SECOND ROW SAMETEXT
             row_1_start = int(self.sequence2a.get())
             row_1_end = int(self.sequence2b.get())
             row_2_start = int(self.sequence3a.get())
             row_2_end = int(self.sequence3b.get())
-            f.start()
-            f.by_row(row_1_start,row_1_end)
-            f.by_rowx2(row_2_start,row_2_end)
+            self.start()
+            self.by_row(row_1_start,row_1_end)
+            self.by_rowx2(row_2_start,row_2_end)
 
         if self.var.get() == '5': #Same text with suffix
             row_1_start = int(self.sequence1a.get())
             row_1_end = int(self.sequence1b.get())
             prefix = self.row_one_text.get()
-            f.start()
-            f.sequential_suffix(row_1_start,row_1_end,prefix)
+            self.start()
+            self.sequential_suffix(row_1_start,row_1_end,prefix)
 
     def list_create(self):
         path = self.display_path_string.get()
@@ -197,7 +196,168 @@ class App:
         text_file.close()
         return value_list
 
-        settings = [*self.sequence1a.get(),*self.sequence1b.get(),*self.sequence2a.get(),*self.sequence2b.get(),*self.w.xc1,*self.w.yc1,*self.w.xc2,*self.w.yc2,*self.w.offset,*DIRECTION]
+#                -------------SEQUENTIAL FUNCTION-------------
+    def sequential(self,row_1_start,row_1_end):
+        for x in range(row_1_start,row_1_end + 1):
+            if(x==row_1_start):
+                x_val = int(self.w.xc1)
+                y_val = int(self.w.yc1)
+            self.text_writer(x,x_val,y_val)
+            if(self.var1.get() == 'DOWN'):
+                y_val = y_val - int(self.w.offset)
+            else:
+                y_val = y_val + int(self.w.offset)
+#                -------------TAG NAMES FUNCTION-------------
+    def different_names(self):
+        tag_list = self.list_create()
+        num_tags = len(tag_list)
+        for x in range(num_tags):
+            if(x==0):
+                x_val = int(self.w.xc1)
+                y_val = int(self.w.yc1)
+                xbox = int(self.w.boxx)
+                ybox = int(self.w.boxy)
+            passval = "{}".format(tag_list[x])
+            self.tag_writer(passval,x_val,y_val,xbox,ybox)
+            if(self.var1.get() == 'DOWN'):
+                y_val = y_val - int(self.w.offset)
+            else:
+                y_val = y_val + int(self.w.offset)
+#                -------------SINGLE ROW FUNCTION-------------
+    def by_row(self,row_2_start,row_2_end):
+        for x in range(row_2_start,row_2_end + 1):
+            if(x==row_2_start):
+                x_val = int(self.w.xc1)
+                y_val = int(self.w.yc1)
+            passval = (self.row_one_text.get() + str(x))
+            self.text_writer(passval,x_val,y_val)
+            if(self.var1.get() == 'DOWN'):
+                y_val = y_val - int(self.w.offset)
+            else:
+                y_val = y_val + int(self.w.offset)
+#               -------------DOUBLE ROW FUNCTION-------------
+    def by_rowx2(self,row_3_start,row_3_end):
+        for x in range(row_3_start,row_3_end + 1):
+            if(x==row_3_start):
+                x_val = int(self.w.xc2)
+                y_val = int(self.w.yc2)
+            passval = (self.row_two_text.get() + str(x))
+            self.text_writer(passval,x_val,y_val)
+            if(self.var1.get() == 'DOWN'):
+                y_val = y_val - int(self.w.offset)
+            else:
+                y_val = y_val + int(self.w.offset)
+
+    def sequential_suffix(self,row_1_start,row_1_end,prefix):
+        for x in range(row_1_start,row_1_end + 1):
+            if(x==row_1_start):
+                x_val = int(self.w.xc1)
+                y_val = int(self.w.yc1)
+            suffix = x
+            passval = '{}{}'.format(prefix,suffix)
+            self.text_writer(passval,x_val,y_val)
+            if(self.var1.get() == 'DOWN'):
+                y_val = y_val - int(self.w.offset)
+            else:
+                y_val = y_val + int(self.w.offset)
+
+#                 -------------PYAUTOGUI STUFF-------------
+    def start(self):
+        pyautogui.moveTo(1130,16)
+        pyautogui.click()
+
+    def text_writer(self,x,x_value,y_value):
+        pyautogui.typewrite("dtext")
+        pyautogui.hotkey("enter")
+        pyautogui.typewrite("{},{}".format(x_value,y_value))
+        pyautogui.hotkey("enter")
+        pyautogui.typewrite("3") #Text size
+        pyautogui.hotkey("enter")
+        pyautogui.typewrite("0") #Text Rotation
+        pyautogui.hotkey("enter")
+        pyautogui.typewrite("{}".format(x))
+        pyautogui.keyDown('ctrl')
+        pyautogui.keyDown('enter')
+        pyautogui.keyUp('enter')
+        pyautogui.keyUp('ctrl')
+
+    def tag_writer(self,x,x_value,y_value,box_x,box_y):
+        pyautogui.PAUSE = 0.25
+        pyautogui.typewrite("mtext")
+        pyautogui.hotkey("enter")
+        pyautogui.typewrite("{},{}".format(x_value,y_value))
+        pyautogui.hotkey("enter")
+        pyautogui.typewrite("{},{}".format(x_value+box_x,y_value-box_y))
+        pyautogui.hotkey("enter")
+        pyautogui.typewrite("{}".format(x))
+        pyautogui.keyDown('ctrl')
+        pyautogui.keyDown('enter')
+        pyautogui.keyUp('enter')
+        pyautogui.keyUp('ctrl')
+
+#===============================================================================
+#-----------------------PARAMETERS POPUP---------------------------------------#
+#===============================================================================
+class popupWindow(object):
+    def __init__(self,master,var):
+        top = self.top = Toplevel(master,bd=15)
+        self.top.title("Coordinates")
+        padding_x = 10
+        padding_y = 2
+        self.var = var
+        self.offset_text = Message(top,text = 'Input Offset:',aspect=500,justify=LEFT).pack(anchor = CENTER,pady=padding_y)
+        self.offset_entry = Entry(top)
+        self.offset_entry.pack(anchor = CENTER)
+        self.valuestex_tx1 = Message(top,text= 'Input X Coordinate Row 1:',aspect=500,justify=LEFT).pack(anchor = CENTER,pady=padding_y)
+        self.xcoordentry_x1 = Entry(top)
+        self.xcoordentry_x1.pack(anchor = CENTER)
+        self.valuestext_y1 = Message(top,text= 'Input Y Coordinate Row 1:',aspect=500,justify=LEFT).pack(anchor = CENTER,pady=padding_y)
+        self.ycoordentry_y1 = Entry(top)
+        self.ycoordentry_y1.pack(anchor = CENTER)
+        self.valuestex_tx2 = Message(top,text= 'Input X Coordinate Row 2:',aspect=500,justify=LEFT).pack(anchor = CENTER,pady=padding_y)
+        self.xcoordentry_x2 = Entry(top)
+        self.xcoordentry_x2.pack(anchor = CENTER)
+        self.valuestext_y2 = Message(top,text= 'Input Y Coordinate Row 2:',aspect=500,justify=LEFT).pack(anchor = CENTER,pady=padding_y)
+        self.ycoordentry_y2 = Entry(top)
+        self.ycoordentry_y2.pack(anchor = CENTER)
+        self.boxx_text = Message(top,text = 'mtext Width:',justify=LEFT).pack(anchor = CENTER,pady=padding_y)
+        self.box_x = Entry(top)
+        self.box_x.pack(anchor = CENTER)
+        self.box_x.config(state = 'disabled')
+        self.boxy_text = Message(top,text= 'mtext Height:',justify = LEFT).pack(anchor = CENTER,pady=padding_y)
+        self.box_y = Entry(top)
+        self.box_y.pack(anchor = CENTER)
+        self.box_y.config(state = 'disabled')
+        self.exit_button = Button(top,text = "OKAY", command = self.cleanup)
+        self.exit_button.pack(anchor=S,side = BOTTOM,pady=padding_y+20)
+        self.disable_entry()
+        self.top.bind('<Return>', lambda x: self.exit_button.invoke())
+
+    def cleanup(self):
+        self.offset = self.offset_entry.get()
+        self.xc1 = self.xcoordentry_x1.get()
+        self.yc1 = self.ycoordentry_y1.get()
+        self.xc2 = self.xcoordentry_x2.get()
+        self.yc2 = self.ycoordentry_y2.get()
+        self.boxx = self.box_x.get()
+        self.boxy = self.box_y.get()
+        self.top.destroy()
+
+#sequentiall
+#tagnames
+#single
+#double
+#sametext
+
+    def disable_entry(self):
+        if(self.var.get() == '2'):
+            self.xcoordentry_x2.config(state='disabled')
+            self.ycoordentry_y2.config(state='disabled')
+            self.box_x.config(state = 'normal')
+            self.box_y.config(state = 'normal')
+        if((self.var.get() == '3') or (self.var.get() == '1') or (self.var.get() == '5')):
+            self.xcoordentry_x2.config(state='disabled')
+            self.ycoordentry_y2.config(state='disabled')
 
 if __name__ == '__main__':
     root = Tk()

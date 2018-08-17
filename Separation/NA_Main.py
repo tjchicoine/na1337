@@ -1,5 +1,6 @@
 from tkinter import *
 import time
+from Functions import pypoweredfunctions as f
 
 class Main_Window:
     def __init__(self,master):
@@ -21,7 +22,7 @@ class Main_Window:
         ('First Value + Suffix','5')]
 
         for text,mode in MODES:
-            self.Mode_Selection = Radiobutton(master,text = text,variable = self.mode_str,value = mode,command= self.mode_select ,justify=CENTER).pack(anchor=W,padx=(50,0))
+            self.Mode_Selection = Radiobutton(master,text = text,variable = self.mode_str,value = mode,command= self.mode_select ,justify=LEFT).pack(anchor=W,padx=(5,5))
 
         #-------------------------Option Menu For Direction--------------------#
         self.direction_msg = Message(master,text = 'Select Direction of Input:',aspect=200,justify= CENTER)
@@ -45,24 +46,24 @@ class Main_Window:
         self.display_path_string.set('Please choose a text file')
         self.display_path_Label = Label(master,textvariable = self.display_path_string,bg = '#fff').pack(anchor = CENTER,padx=padding_x)
 
-        #--------------------------TEXT TO REPEAT VALUE ENTRY------------------#
+        #--------------------------Prefixes------------------------------------#
         self.line = Message(master,text = '============',aspect = 500, justify = CENTER).pack()
-        self.row1text_message = Message(master,text = 'First Row Same Text (use as prefix)',aspect=300,justify = CENTER).pack()
+        self.row1text_message = Message(master,text = 'Row 1 Prefix',aspect=300,justify = CENTER).pack()
         self.row1text = Entry(master)
         self.row1text.pack()
         self.row1text.config(state='disabled')
-        self.row2text_message = Message(master,text = 'Second Row Same Text',aspect=200,justify = CENTER).pack()
+        self.row2text_message = Message(master,text = 'Row 2 Prefix',aspect=200,justify = CENTER).pack()
         self.row2text = Entry(master)
         self.row2text.pack()
         self.row2text.config(state='disabled')
 
-        #---------------------Sequential Number VALUE ENTRY--------------------#
-        self.sequence1a_message = Message(master,text = 'Sequential: Enter Lowest # -> Highest #',aspect=900).pack(pady=padding_y)
+        #---------------------Sequential Number -------------------------------#
+        self.sequence1a_message = Message(master,text = 'Row 1: Lowest -> Highest',aspect=900).pack(pady=padding_y)
         self.sequence1a = Entry(master)
         self.sequence1a.pack()
         self.sequence1b = Entry(master)
         self.sequence1b.pack()
-        self.sequence2_message = Message(master,text = 'Row 1: Enter Lowest # -> Highest #',aspect=800).pack(pady=padding_y)
+        self.sequence2_message = Message(master,text = 'Row 2: Lowest -> Highest',aspect=800).pack(pady=padding_y)
         self.sequence2a = Entry(master)
         self.sequence2a.pack(padx=padding_x+20)
         self.sequence2a.config(state='disabled')
@@ -70,8 +71,11 @@ class Main_Window:
         self.sequence2b.pack(padx=padding_x+20)
         self.sequence2b.config(state='disabled')
 
-        self.start_button = Button(master,text = "Start",command = self.start_button_onclick).pack(side = BOTTOM,pady=(30,5), padx=padding_x, fill = X)
-        self.exit_button = Button(master,text = "Quit", command = master.destroy).pack(anchor=S,side = BOTTOM,pady=(5,30),padx = padding_x,fill = X)
+        self.display_error_string = StringVar()
+        self.display_error = Label(master,textvariable=self.display_error_string).pack(anchor = CENTER,padx = padding_x)
+
+        self.start_button = Button(master,text = "Start",command = self.start_button_onclick).pack(pady=(5,5), padx=padding_x, fill = X)
+        self.exit_button = Button(master,text = "Quit", command = master.destroy).pack(side = BOTTOM,pady=(5,5),padx = padding_x,fill = X)
 
         #---------------------Mode Selection----------------------#
 
@@ -91,8 +95,9 @@ class Main_Window:
             self.filechooserbutton.config(state='normal')
             self.disable_all()
         else: self.filechooserbutton.config(state='disabled')
+
         #SAMETEXT1
-        if mode_str.get() == '3':
+        if self.mode_str.get() == '3':
             self.row1text.config(state='normal')
             self.row2text.config(state='disabled')
             self.sequence2a.config(state='normal')
@@ -129,7 +134,8 @@ class Main_Window:
         import os
         path = filedialog.askopenfilename(initialdir = "C:/Users/tyler/Desktop/Scripts",title = "Select File", filetypes = (("text files","*.txt"),("all files","*.*")))
         path_string = os.path.join(path)
-        self.display_path_string.set(path_string)
+        if(len(path_string)>0):
+            self.display_path_string.set(path_string)
         print(path_string)
 
     #-------------------------OPEN POPUP WINDOW--------------------------------#
@@ -144,42 +150,51 @@ class Main_Window:
 #---------------Start Button and stuff that happens after click----------------#
 #===============================================================================
     def start_button_onclick(self):
-        if var.get() == '1': #SEQUENTIAL
-            row_1_start = sequence1a.get()
-            row_1_end = sequence1b.get()
-            if len(row_1_end)==0 or not row_1_end.isdigit():
-                print('We have a problem')
-            else:
-                row_1_start = int(row_1_start)
-                row_1_end = int(row_1_end)
-                f.start()
-                f.sequential(row_1_start,row_1_end)
+        mode = int(self.mode_str.get())
 
-        if var.get() == '2': #TAG NAMES
+
+        if (self.sequence1a.get()).isdigit() and (self.sequence1b.get()).isdigit():
+            row1start = int(self.sequence1a.get())
+            row1end = int(self.sequence1b.get())
+            if row1end==0:
+                self.display_error_string.set('Row End Cannot be 0')
+        else: self.display_error_string.set('Please Set Values')
+
+        if mode==4:
+            if (self.sequence2a.get()).isdigit() and (self.sequence2b.get()).isdigit():
+                row2start = int(self.sequence2a.get())
+                row2end = int(self.sequence2b.get())
+                if row2end==0:
+                    self.display_error_string.set('Row End Cannot be 0')
+            else: self.display_error_string.set('Please Set Values')
+
+        row1prefix = self.row1text.get()
+        row2prefix = self.row2text.get()
+
+        if self.mode_str.get() != "2":
             f.start()
+
+        #SEQUENTIAL
+        if self.mode_str.get() == '1':
+            f.sequential(row1start,row1end)
+
+        #TAG NAMES
+        if self.mode_str.get() == '2':
+            taglist = self.list_create()
             f.different_names()
 
-        if var.get() == '3': #SINGLE ROW SAMETEXT
-            row_1_start = int(sequence2a.get())
-            row_1_end = int(sequence2b.get())
-            f.start()
-            f.by_row(row_1_start,row_1_end)
+        #SINGLE ROW SAMETEXT
+        if self.mode_str.get() == '3':
+            f.by_row(row1start,row1end)
 
-        if var.get() == '4': #SECOND ROW SAMETEXT
-            row_1_start = int(sequence2a.get())
-            row_1_end = int(sequence2b.get())
-            row_2_start = int(sequence3a.get())
-            row_2_end = int(sequence3b.get())
-            f.start()
-            f.by_row(row_1_start,row_1_end)
-            f.by_rowx2(row_2_start,row_2_end)
+        #SECOND ROW SAMETEXT
+        if self.mode_str.get() == '4':
+            f.by_row(row1start,row1end)
+            f.by_rowx2(row2start,row2end)
 
-        if var.get() == '5': #Same text with suffix
-            row_1_start = int(sequence1a.get())
-            row_1_end = int(sequence1b.get())
-            prefix = row1text.get()
-            f.start()
-            f.sequential_suffix(row_1_start,row_1_end,prefix)
+        #Prefix w/ incrementing numbers
+        if self.mode_str.get() == '5':
+            f.sequential_suffix(row1start,row1end,prefix)
 
     def list_create(self):
         path = display_path_string.get()
@@ -188,7 +203,7 @@ class Main_Window:
         text_file.close()
         return value_list
 
-        settings = [*sequence1a.get(),*sequence1b.get(),*sequence2a.get(),*sequence2b.get(),*w.xc1,*w.yc1,*w.xc2,*w.yc2,*w.offset,*DIRECTION]
+
 
 if __name__ == '__main__':
     root = Tk()

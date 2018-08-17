@@ -86,6 +86,8 @@ class Main_Window:
         if (mode=='1'):
             self.sequence1a.config(state='normal')
             self.sequence1b.config(state='normal')
+        if (mode=='2'):
+            self.filechooserbutton.config(state='normal')
         if (mode=='3'):
             self.row1text.config(state='normal')
             self.sequence1a.config(state='normal')
@@ -141,6 +143,9 @@ class Main_Window:
                 self.display_error_string.set('Row End Cannot be 0')
         else: self.display_error_string.set('Please Set Values')
 
+        if mode == '2':
+            taglist = self.list_create()
+
         if mode=='4':
             if (self.sequence2a.get()).isdigit() and (self.sequence2b.get()).isdigit():
                 row2start = int(self.sequence2a.get())
@@ -151,31 +156,12 @@ class Main_Window:
 
         entries = [row1prefix,row2prefix,row1start,row1end,row2start,row2end]
 
-        runner = pypoweredfunctions(coordinates,entries,mode,direction)
+        runner = pypoweredfunctions(coordinates,entries,mode,direction,*taglist)
 
-        if mode != "2":
-            runner.start()
 
-        #SEQUENTIAL
-        if mode == '1':
-            f.sequential(row1start,row1end)
-
-        #TAG NAMES
-        if mode == '2':
-            taglist = self.list_create()
-            f.different_names()
-
-        #SINGLE ROW SAMETEXT
-        if mode == '3':
-            f.by_row(row1start,row1end)
-
-        #SECOND ROW SAMETEXT
-        if mode == '4':
-            f.by_row(row1start,row1end)
-            f.by_rowx2(row2start,row2end)
 
     def list_create(self):
-        path = display_path_string.get()
+        path = self.display_path_string.get()
         text_file = open(path,"r")
         value_list = text_file.read().split('\n')
         text_file.close()

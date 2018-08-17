@@ -1,62 +1,65 @@
 from tkinter import *
 
 class popupWindow(object):
-    def __init__(self,master,var):
+    def __init__(self,master,mode):
         top = self.top = Toplevel(master,bd=15)
-        self.top.title("Coordinates")
+        top.title("Coordinates")
         padding_x = 10
         padding_y = 2
-        self.var = var
-        self.offset_text = Message(top,text = 'Input Offset:',aspect=500,justify=LEFT).pack(anchor = CENTER,pady=padding_y)
+        self.mode = mode
+
+        self.offset_m = Message(top,text = 'Input Offset:',aspect=500,justify=LEFT).pack(anchor = CENTER,pady=padding_y)
         self.offset_entry = Entry(top)
         self.offset_entry.pack(anchor = CENTER)
-        self.valuestex_tx1 = Message(top,text= 'Input X Coordinate Row 1:',aspect=500,justify=LEFT).pack(anchor = CENTER,pady=padding_y)
-        self.xcoordentry_x1 = Entry(top)
-        self.xcoordentry_x1.pack(anchor = CENTER)
-        self.valuestext_y1 = Message(top,text= 'Input Y Coordinate Row 1:',aspect=500,justify=LEFT).pack(anchor = CENTER,pady=padding_y)
-        self.ycoordentry_y1 = Entry(top)
-        self.ycoordentry_y1.pack(anchor = CENTER)
-        self.valuestex_tx2 = Message(top,text= 'Input X Coordinate Row 2:',aspect=500,justify=LEFT).pack(anchor = CENTER,pady=padding_y)
-        self.xcoordentry_x2 = Entry(top)
-        self.xcoordentry_x2.pack(anchor = CENTER)
-        self.valuestext_y2 = Message(top,text= 'Input Y Coordinate Row 2:',aspect=500,justify=LEFT).pack(anchor = CENTER,pady=padding_y)
-        self.ycoordentry_y2 = Entry(top)
-        self.ycoordentry_y2.pack(anchor = CENTER)
-        self.boxx_text = Message(top,text = 'mtext Width:',justify=LEFT).pack(anchor = CENTER,pady=padding_y)
-        self.box_x = Entry(top)
-        self.box_x.pack(anchor = CENTER)
-        self.box_x.config(state = 'disabled')
-        self.boxy_text = Message(top,text= 'mtext Height:',justify = LEFT).pack(anchor = CENTER,pady=padding_y)
-        self.box_y = Entry(top)
-        self.box_y.pack(anchor = CENTER)
-        self.box_y.config(state = 'disabled')
-        self.exit_button = Button(top,text = "OKAY", command = self.cleanup)
-        self.exit_button.pack(anchor=S,side = BOTTOM,pady=padding_y+20)
-        self.disable_entry()
-        self.top.bind('<Return>', lambda x: self.exit_button.invoke())
+
+        self.x1_m = Message(top,text= 'Input X Coordinate Row 1:',aspect=500,justify=LEFT).pack(anchor = CENTER,pady=padding_y)
+        self.x1_entry = Entry(top)
+        self.x1_entry.pack(anchor = CENTER)
+
+        self.y1_m = Message(top,text= 'Input Y Coordinate Row 1:',aspect=500,justify=LEFT).pack(anchor = CENTER,pady=padding_y)
+        self.y1_entry = Entry(top)
+        self.y1_entry.pack(anchor = CENTER)
+
+        self.x2_m = Message(top,text= 'Input X Coordinate Row 2:',aspect=500,justify=LEFT).pack(anchor = CENTER,pady=padding_y)
+        self.x2_entry = Entry(top)
+        self.x2_entry.pack(anchor = CENTER)
+        self.x2_entry.config(state = 'disabled')
+
+        self.y2_m = Message(top,text= 'Input Y Coordinate Row 2:',aspect=500,justify=LEFT).pack(anchor = CENTER,pady=padding_y)
+        self.y2_entry = Entry(top)
+        self.y2_entry.pack(anchor = CENTER)
+        self.y2_entry.config(state = 'disabled')
+
+        self.width_m = Message(top,text = 'mtext Width:',justify=LEFT).pack(anchor = CENTER,pady=padding_y)
+        self.width_entry = Entry(top)
+        self.width_entry.pack(anchor = CENTER)
+        self.width_entry.config(state = 'disabled')
+
+        self.height_m = Message(top,text= 'mtext Height:',justify = LEFT).pack(anchor = CENTER,pady=padding_y)
+        self.height_entry = Entry(top)
+        self.height_entry.pack(anchor = CENTER)
+        self.height_entry.config(state = 'disabled')
+
+        self.okay_button = Button(top,text = "OKAY", command = self.cleanup)
+        self.okay_button.pack(anchor=S,side = BOTTOM,pady=padding_y+5)
+        self.enable_entry()
+        top.bind('<Return>', lambda x: self.okay_button.invoke())
 
     def cleanup(self):
-        self.offset = self.offset_entry.get()
-        self.xc1 = self.xcoordentry_x1.get()
-        self.yc1 = self.ycoordentry_y1.get()
-        self.xc2 = self.xcoordentry_x2.get()
-        self.yc2 = self.ycoordentry_y2.get()
-        self.boxx = self.box_x.get()
-        self.boxy = self.box_y.get()
+        offset = self.offset_entry.get()
+        xc1 = self.x1_entry.get()
+        yc1 = self.y1_entry.get()
+        xc2 = self.x2_entry.get()
+        yc2 = self.y2_entry.get()
+        width = self.width_entry.get()
+        height = self.height_entry.get()
+        self.coordinates = [offset,xc1,yc1,xc2,yc2,width,height]
         self.top.destroy()
 
-#sequentiall
-#tagnames
-#single
-#double
-#sametext
-
-    def disable_entry(self):
-        if(self.var.get() == '2'):
-            self.xcoordentry_x2.config(state='disabled')
-            self.ycoordentry_y2.config(state='disabled')
-            self.box_x.config(state = 'normal')
-            self.box_y.config(state = 'normal')
-        if((self.var.get() == '3') or (self.var.get() == '1') or (self.var.get() == '5')):
-            self.xcoordentry_x2.config(state='disabled')
-            self.ycoordentry_y2.config(state='disabled')
+    def enable_entry(self):
+        if(self.mode == '2'):
+            width_entry.config(state = 'normal')
+            height_entry.config(state = 'normal')
+        if(self.mode == '4'):
+            x2_entry.config(state='normal')
+            y2_entry.config(state='normal')

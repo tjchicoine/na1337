@@ -1,11 +1,13 @@
 from tkinter import *
 import time
-from Functions import pypoweredfunctions as f
+from Functions import pypoweredfunctions
+from NA_Popup_Window import popupWindow
 
 class Main_Window:
     def __init__(self,master):
         padding_x = 5
         padding_y = 5
+        self.coordinates = [2,25,25,25,25,25,25]
         self.master = master
 
         self.master.title("N.A 1.337")
@@ -15,11 +17,10 @@ class Main_Window:
         self.mode_str = StringVar()
         self.mode_str.set('1')
 
-        MODES = [('Sequential','1'),
+        MODES = [('Sequential Numbers','1'),
         ('Tag Names','2'),
-        ('1 Row Same Text','3'),
-        ('2 Row Input Text','4'),
-        ('First Value + Suffix','5')]
+        ('1 Row Prefix','3'),
+        ('2 Row Prefix','4')]
 
         for text,mode in MODES:
             self.Mode_Selection = Radiobutton(master,text = text,variable = self.mode_str,value = mode,command= self.mode_select ,justify=LEFT).pack(anchor=W,padx=(5,5))
@@ -80,47 +81,22 @@ class Main_Window:
         #---------------------Mode Selection----------------------#
 
     def mode_select(self):
-
-        #SEQUENTIAL
-        if self.mode_str.get() == '1':
+        self.disable_all()
+        mode = self.mode_str.get()
+        if (mode=='1'):
             self.sequence1a.config(state='normal')
             self.sequence1b.config(state='normal')
-            self.row1text.config(state='disabled')
-            self.row2text.config(state='disabled')
-            self.sequence2a.config(state='disabled')
-            self.sequence2b.config(state='disabled')
-
-        #TAGNAMES
-        if self.mode_str.get() == '2':
-            self.filechooserbutton.config(state='normal')
-            self.disable_all()
-        else: self.filechooserbutton.config(state='disabled')
-
-        #SAMETEXT1
-        if self.mode_str.get() == '3':
-            self.row1text.config(state='normal')
-            self.row2text.config(state='disabled')
-            self.sequence2a.config(state='normal')
-            self.sequence2b.config(state='normal')
-            self.sequence1a.config(state='disabled')
-            self.sequence1b.config(state='disabled')
-
-        #SAMETEXT2
-        if self.mode_str.get() == '4':
-            self.row1text.config(state='normal')
-            self.row1text.config(state='normal')
-            self.sequence2a.config(state='normal')
-            self.sequence2b.config(state='normal')
-            self.sequence1a.config(state='disabled')
-            self.sequence1b.config(state='disabled')
-
-        #For sametext + a Suffix
-        if self.mode_str.get() == '5':
-            self.disable_all()
+        if (mode=='3'):
             self.row1text.config(state='normal')
             self.sequence1a.config(state='normal')
             self.sequence1b.config(state='normal')
-
+        if (mode=='4'):
+            self.row1text.config(state='normal')
+            self.sequence1a.config(state='normal')
+            self.sequence1b.config(state='normal')
+            self.row2text.config(state='normal')
+            self.sequence2a.config(state='normal')
+            self.sequence2b.config(state='normal')
     def disable_all(self):
             self.row1text.config(state='disabled')
             self.row2text.config(state='disabled')
@@ -140,18 +116,23 @@ class Main_Window:
 
     #-------------------------OPEN POPUP WINDOW--------------------------------#
     def popup(self):
-        w = popupWindow(master,var)
-        coordinate_button['state'] = 'disabled'
-        master.wait_window(w.top)
-        coordinate_button['state'] = 'normal'
+        w = popupWindow(self.master,self.mode_str)
+        self.coordinate_button['state'] = 'disabled'
+        self.master.wait_window(w.top)
+        self.coordinate_button['state'] = 'normal'
+        self.coordinates = w.coordinates
 
-
-#===============================================================================
 #---------------Start Button and stuff that happens after click----------------#
-#===============================================================================
     def start_button_onclick(self):
-        mode = int(self.mode_str.get())
-
+        mode = str(self.mode_str.get())
+        direction = str(self.direction.get())
+        coordinates = self.coordinates
+        row1prefix = self.row1text.get()
+        row2prefix = self.row2text.get()
+        row1start = 0
+        row1end = 0
+        row2start = 0
+        row2end = 0
 
         if (self.sequence1a.get()).isdigit() and (self.sequence1b.get()).isdigit():
             row1start = int(self.sequence1a.get())
@@ -160,7 +141,7 @@ class Main_Window:
                 self.display_error_string.set('Row End Cannot be 0')
         else: self.display_error_string.set('Please Set Values')
 
-        if mode==4:
+        if mode=='4':
             if (self.sequence2a.get()).isdigit() and (self.sequence2b.get()).isdigit():
                 row2start = int(self.sequence2a.get())
                 row2end = int(self.sequence2b.get())
@@ -168,33 +149,30 @@ class Main_Window:
                     self.display_error_string.set('Row End Cannot be 0')
             else: self.display_error_string.set('Please Set Values')
 
-        row1prefix = self.row1text.get()
-        row2prefix = self.row2text.get()
+        entries = [row1prefix,row2prefix,row1start,row1end,row2start,row2end]
 
-        if self.mode_str.get() != "2":
-            f.start()
+        runner = pypoweredfunctions(coordinates,entries,mode,direction)
+
+        if mode != "2":
+            runner.start()
 
         #SEQUENTIAL
-        if self.mode_str.get() == '1':
+        if mode == '1':
             f.sequential(row1start,row1end)
 
         #TAG NAMES
-        if self.mode_str.get() == '2':
+        if mode == '2':
             taglist = self.list_create()
             f.different_names()
 
         #SINGLE ROW SAMETEXT
-        if self.mode_str.get() == '3':
+        if mode == '3':
             f.by_row(row1start,row1end)
 
         #SECOND ROW SAMETEXT
-        if self.mode_str.get() == '4':
+        if mode == '4':
             f.by_row(row1start,row1end)
             f.by_rowx2(row2start,row2end)
-
-        #Prefix w/ incrementing numbers
-        if self.mode_str.get() == '5':
-            f.sequential_suffix(row1start,row1end,prefix)
 
     def list_create(self):
         path = display_path_string.get()

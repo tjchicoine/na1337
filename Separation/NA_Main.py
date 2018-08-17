@@ -145,6 +145,7 @@ class Main_Window:
 
         if mode == '2':
             taglist = self.list_create()
+        else: taglist = []
 
         if mode=='4':
             if (self.sequence2a.get()).isdigit() and (self.sequence2b.get()).isdigit():

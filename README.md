@@ -1,1 +1,1 @@
-# Working towards automation of nanocad with python
+# Python NANOCAD automation GUI

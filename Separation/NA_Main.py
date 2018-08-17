@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import ttk
 import time
 from Functions import pypoweredfunctions
 from NA_Popup_Window import popupWindow
@@ -7,6 +8,17 @@ class Main_Window:
     def __init__(self,master):
         padding_x = 5
         padding_y = 5
+        rows = 0
+        while rows < 50:
+            master.rowconfigure(rows,weight = 1)
+            master.columnconfigure(rows,weight = 1)
+            rows +=1
+
+        self.nb = ttk.Notebook(master)
+        self.nb.grid(row =1,column =0,columnspan=50,rowspan=49,sticky='NESW')
+        self.page1 = ttk.Frame(self.nb)
+        self.nb.add(self.page1,text='tab1')
+
         self.coordinates = [2,25,25,25,25,25,25]
         self.master = master
 

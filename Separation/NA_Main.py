@@ -9,21 +9,23 @@ class Main_Window:
         padding_x = 5
         padding_y = 5
         rows = 0
+        self.coordinates = [2,25,25,25,25,25,25]
+        self.master = master
+
         while rows < 50:
             master.rowconfigure(rows,weight = 1)
             master.columnconfigure(rows,weight = 1)
             rows +=1
 
+        self.master.title("N.A 1.337")
+        self.welcomemessage = Message(master,text = "NANOCAD AUTOFILLER 1.337",aspect=200,justify = CENTER).grid(column=0,columnspan=50)
+
         self.nb = ttk.Notebook(master)
         self.nb.grid(row =1,column =0,columnspan=50,rowspan=49,sticky='NESW')
-        self.page1 = ttk.Frame(self.nb)
-        self.nb.add(self.page1,text='tab1')
-
-        self.coordinates = [2,25,25,25,25,25,25]
-        self.master = master
-
-        self.master.title("N.A 1.337")
-        self.welcomemessage = Message(master,text = "NANOCAD AUTOFILLER 1.337",aspect=200,justify = CENTER).pack()
+        p1 = self.page1 = ttk.Frame(self.nb)
+        self.nb.add(self.page1,text='Sequential Text')
+        p2 = self.page2 = ttk.Frame(self.nb)
+        self.nb.add(self.page2,text='More Complicated Stuff')
 
         #-------------------------Radiobutton Introduction---------------------#
         self.mode_str = StringVar()
@@ -31,65 +33,69 @@ class Main_Window:
 
         MODES = [('Sequential Numbers','1'),
         ('Tag Names','2'),
-        ('1 Row Prefix','3'),
-        ('2 Row Prefix','4')]
+        ('1 Row With Prefix','3'),
+        ('2 Row With Prefix','4')]
 
         for text,mode in MODES:
-            self.Mode_Selection = Radiobutton(master,text = text,variable = self.mode_str,value = mode,command= self.mode_select ,justify=LEFT).pack(anchor=W,padx=(5,5))
+            self.Mode_Selection = Radiobutton(p1,text = text,variable = self.mode_str,value = mode,command= self.mode_select).grid(row=int(mode),column = 0,sticky='W',padx = 5)
 
         #-------------------------Option Menu For Direction--------------------#
-        self.direction_msg = Message(master,text = 'Select Direction of Input:',aspect=200,justify= CENTER)
-        self.direction_msg.pack(anchor = CENTER,pady=(15,0))
+        self.s = ttk.Separator(p1,orient='horizontal')
+        self.s.grid(columnspan=50,sticky = E+W,padx=10,pady=10)
+        self.direction_msg = Message(p1,text = 'Select Direction of Input:',aspect=400,justify= CENTER).grid(row = 6, column = 0,sticky='W')
         DIRECTION = ['DOWN','UP']
         direction_mode = self.direction = StringVar()
         self.direction.set(DIRECTION[0])
-        self.direction_menu = OptionMenu(master,direction_mode,*DIRECTION)
-        self.direction_menu.pack()
-
-        #----------------OPEN POPUP TO SET COORDINATES-------------------------#
-        self.coordinate_button = Button(master,text = 'Initial Coordinates',command = self.popup)
-        self.coordinate_button.pack(anchor = CENTER,padx=padding_x,pady=padding_y)
+        self.direction_menu = OptionMenu(p1,direction_mode,*DIRECTION)
+        self.direction_menu.grid(row = 6, column = 1)
 
         #--------------------------Select Text File----------------------------#
-        self.filechooserbutton = Button(master,text = "Text File",command = self.get_filename)
-        self.filechooserbutton.pack(anchor = CENTER,padx=padding_x,pady=padding_y)
+        self.filechoose_m = Message(p1,text = 'If using tags, choose text file:',aspect = 400).grid(row = 7, column = 0,sticky = 'W')
+        self.filechooserbutton = Button(p1,text = "Text File",command = self.get_filename)
         self.filechooserbutton.config(state='disabled')
+        self.filechooserbutton.grid(row = 7, column = 1,ipadx=12)
+
 
         self.display_path_string = StringVar()
-        self.display_path_string.set('Please choose a text file')
-        self.display_path_Label = Label(master,textvariable = self.display_path_string,bg = '#fff').pack(anchor = CENTER,padx=padding_x)
-
+        self.display_path_string.set('Selected Path')
+        self.display_path_Label = Label(p1,textvariable = self.display_path_string,bg = '#fff')
+        self.display_path_Label.grid(row = 7, column = 2,ipadx = 20)
         #--------------------------Prefixes------------------------------------#
-        self.line = Message(master,text = '============',aspect = 500, justify = CENTER).pack()
-        self.row1text_message = Message(master,text = 'Row 1 Prefix',aspect=300,justify = CENTER).pack()
-        self.row1text = Entry(master)
-        self.row1text.pack()
+        self.line = Message(p1,text = '============',aspect = 500, justify = CENTER).grid(row=8,columnspan=50)
+        self.row1text_message = Message(p1,text = 'Row 1 Prefix',aspect=300,justify = CENTER).grid(row=9,sticky='W')
+        self.row1text = Entry(p1)
+        self.row1text.grid(row=9,column=1)
         self.row1text.config(state='disabled')
-        self.row2text_message = Message(master,text = 'Row 2 Prefix',aspect=200,justify = CENTER).pack()
-        self.row2text = Entry(master)
-        self.row2text.pack()
+        self.row2text_message = Message(p1,text = 'Row 2 Prefix',aspect=200,justify = CENTER).grid(row=10,sticky='W')
+        self.row2text = Entry(p1)
+        self.row2text.grid(row=10,column=1)
         self.row2text.config(state='disabled')
 
         #---------------------Sequential Number -------------------------------#
-        self.sequence1a_message = Message(master,text = 'Row 1: Lowest -> Highest',aspect=900).pack(pady=padding_y)
-        self.sequence1a = Entry(master)
-        self.sequence1a.pack()
-        self.sequence1b = Entry(master)
-        self.sequence1b.pack()
-        self.sequence2_message = Message(master,text = 'Row 2: Lowest -> Highest',aspect=800).pack(pady=padding_y)
-        self.sequence2a = Entry(master)
-        self.sequence2a.pack(padx=padding_x+20)
+        self.sequence1a_message = Message(p1,text = 'Row 1: Lowest -> Highest',aspect=900).grid(row=11,sticky='W')
+        self.sequence1a = Entry(p1)
+        self.sequence1a.grid(row=11,column=1)
+        self.sequence1b = Entry(p1)
+        self.sequence1b.grid(row=12,column=1)
+        self.sequence2_message = Message(p1,text = 'Row 2: Lowest -> Highest',aspect=800).grid(row=13,sticky='W')
+        self.sequence2a = Entry(p1)
+        self.sequence2a.grid(row=13,column=1)
         self.sequence2a.config(state='disabled')
-        self.sequence2b = Entry(master)
-        self.sequence2b.pack(padx=padding_x+20)
+        self.sequence2b = Entry(p1)
+        self.sequence2b.grid(row=14,column=1)
         self.sequence2b.config(state='disabled')
 
+        #----------------OPEN POPUP TO SET COORDINATES-------------------------#
+        self.coordinate_button = Button(p1,text = 'Initial Coordinates',command = self.popup)
+        self.coordinate_button.grid(row=15,columnspan=50,pady=padding_y)
+
         self.display_error_string = StringVar()
-        self.display_error = Label(master,textvariable=self.display_error_string).pack(anchor = CENTER,padx = padding_x)
-
-        self.start_button = Button(master,text = "Start",command = self.start_button_onclick).pack(pady=(5,5), padx=padding_x, fill = X)
-        self.exit_button = Button(master,text = "Quit", command = master.destroy).pack(side = BOTTOM,pady=(5,5),padx = padding_x,fill = X)
-
+        self.display_error = Label(master,textvariable=self.display_error_string)
+        self.display_error.grid(sticky = 'S')
+        self.start_button = Button(p1,text = "Start",command = self.start_button_onclick)
+        self.start_button.grid(row = 16,columnspan=50,pady=padding_y,ipadx=36)
+        self.exit_button = Button(master,text = "Quit", command = master.destroy)
+        self.exit_button.grid(columnspan=50,sticky = S+E+W,padx=padding_x,pady=padding_y)
         #---------------------Mode Selection----------------------#
 
     def mode_select(self):
@@ -112,6 +118,7 @@ class Main_Window:
             self.sequence2a.config(state='normal')
             self.sequence2b.config(state='normal')
     def disable_all(self):
+            self.filechooserbutton.config(state='disabled')
             self.row1text.config(state='disabled')
             self.row2text.config(state='disabled')
             self.sequence1a.config(state='disabled')

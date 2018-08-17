@@ -33,17 +33,17 @@ class Main_Window:
         self.direction_menu.pack()
 
         #----------------OPEN POPUP TO SET COORDINATES-------------------------#
-        self.coordinate_button = Button(master,text = 'Initial Coordinates',command = popup)
+        self.coordinate_button = Button(master,text = 'Initial Coordinates',command = self.popup)
         self.coordinate_button.pack(anchor = CENTER,padx=padding_x,pady=padding_y)
 
         #--------------------------Select Text File----------------------------#
-        self.filechooserbutton = Button(master,text = "Text File",command = get_filename)
+        self.filechooserbutton = Button(master,text = "Text File",command = self.get_filename)
         self.filechooserbutton.pack(anchor = CENTER,padx=padding_x,pady=padding_y)
         self.filechooserbutton.config(state='disabled')
 
         self.display_path_string = StringVar()
         self.display_path_string.set('Please choose a text file')
-        self.display_path_Label = Label(master,textvariable = display_path_string,bg = '#fff').pack(anchor = CENTER,padx=padding_x)
+        self.display_path_Label = Label(master,textvariable = self.display_path_string,bg = '#fff').pack(anchor = CENTER,padx=padding_x)
 
         #--------------------------TEXT TO REPEAT VALUE ENTRY------------------#
         self.line = Message(master,text = '============',aspect = 500, justify = CENTER).pack()
@@ -70,66 +70,66 @@ class Main_Window:
         self.sequence2b.pack(padx=padding_x+20)
         self.sequence2b.config(state='disabled')
 
-        self.start_button = Button(master,text = "Start",command = start_button_onclick).pack(side = BOTTOM,pady=(30,5), padx=padding_x, fill = X)
+        self.start_button = Button(master,text = "Start",command = self.start_button_onclick).pack(side = BOTTOM,pady=(30,5), padx=padding_x, fill = X)
         self.exit_button = Button(master,text = "Quit", command = master.destroy).pack(anchor=S,side = BOTTOM,pady=(5,30),padx = padding_x,fill = X)
 
         #---------------------Mode Selection----------------------#
 
     def mode_select(self):
-        if var.get() == '1': #SEQUENTIAL
-            sequence1a.config(state='normal')
-            sequence1b.config(state='normal')
-            row_one_text.config(state='disabled')
-            row_two_text.config(state='disabled')
-            sequence2a.config(state='disabled')
-            sequence2b.config(state='disabled')
-            sequence3a.config(state='disabled')
-            sequence3b.config(state='disabled')
-        if var.get() == '2': #TAGNAMES
-            filechooserbutton.config(state='normal')
-            disable_all()
-        else: filechooserbutton.config(state='disabled')
-        if var.get() == '3': #SAMETEXT1
-            row_one_text.config(state='normal')
-            sequence2a.config(state='normal')
-            sequence2b.config(state='normal')
-            row_two_text.config(state='disabled')
-            sequence1a.config(state='disabled')
-            sequence1b.config(state='disabled')
-            sequence3a.config(state='disabled')
-            sequence3b.config(state='disabled')
-        if var.get() == '4': #SAMETEXT2
-            row_one_text.config(state='normal')
-            row_two_text.config(state='normal')
-            sequence2a.config(state='normal')
-            sequence2b.config(state='normal')
-            sequence3a.config(state='normal')
-            sequence3b.config(state='normal')
-            sequence1a.config(state='disabled')
-            sequence1b.config(state='disabled')
 
-        if var.get() == '5': #For sametext + a Suffix
-            disable_all()
-            row_one_text.config(state='normal')
-            sequence1a.config(state='normal')
-            sequence1b.config(state='normal')
+        #SEQUENTIAL
+        if self.mode_str.get() == '1':
+            self.sequence1a.config(state='normal')
+            self.sequence1b.config(state='normal')
+            self.row1text.config(state='disabled')
+            self.row2text.config(state='disabled')
+            self.sequence2a.config(state='disabled')
+            self.sequence2b.config(state='disabled')
+
+        #TAGNAMES
+        if self.mode_str.get() == '2':
+            self.filechooserbutton.config(state='normal')
+            self.disable_all()
+        else: self.filechooserbutton.config(state='disabled')
+        #SAMETEXT1
+        if mode_str.get() == '3':
+            self.row1text.config(state='normal')
+            self.row2text.config(state='disabled')
+            self.sequence2a.config(state='normal')
+            self.sequence2b.config(state='normal')
+            self.sequence1a.config(state='disabled')
+            self.sequence1b.config(state='disabled')
+
+        #SAMETEXT2
+        if self.mode_str.get() == '4':
+            self.row1text.config(state='normal')
+            self.row1text.config(state='normal')
+            self.sequence2a.config(state='normal')
+            self.sequence2b.config(state='normal')
+            self.sequence1a.config(state='disabled')
+            self.sequence1b.config(state='disabled')
+
+        #For sametext + a Suffix
+        if self.mode_str.get() == '5':
+            self.disable_all()
+            self.row1text.config(state='normal')
+            self.sequence1a.config(state='normal')
+            self.sequence1b.config(state='normal')
 
     def disable_all(self):
-            row_one_text.config(state='disabled')
-            row_two_text.config(state='disabled')
-            sequence1a.config(state='disabled')
-            sequence1b.config(state='disabled')
-            sequence2a.config(state='disabled')
-            sequence2b.config(state='disabled')
-            sequence3a.config(state='disabled')
-            sequence3b.config(state='disabled')
+            self.row1text.config(state='disabled')
+            self.row2text.config(state='disabled')
+            self.sequence1a.config(state='disabled')
+            self.sequence1b.config(state='disabled')
+            self.sequence2a.config(state='disabled')
+            self.sequence2b.config(state='disabled')
 
     def get_filename(self):
-        #from tkinter import filedialog
+        from tkinter import filedialog
         import os
         path = filedialog.askopenfilename(initialdir = "C:/Users/tyler/Desktop/Scripts",title = "Select File", filetypes = (("text files","*.txt"),("all files","*.*")))
         path_string = os.path.join(path)
-        display_path_string.set(path_string)
+        self.display_path_string.set(path_string)
         print(path_string)
 
     #-------------------------OPEN POPUP WINDOW--------------------------------#
@@ -177,7 +177,7 @@ class Main_Window:
         if var.get() == '5': #Same text with suffix
             row_1_start = int(sequence1a.get())
             row_1_end = int(sequence1b.get())
-            prefix = row_one_text.get()
+            prefix = row1text.get()
             f.start()
             f.sequential_suffix(row_1_start,row_1_end,prefix)
 

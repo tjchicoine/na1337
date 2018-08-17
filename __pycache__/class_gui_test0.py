@@ -1,11 +1,7 @@
 from tkinter import *
 import pyautogui
 import time
-<<<<<<< HEAD
 #test 11111
-=======
-
->>>>>>> eda03237bc5cf46b993ee5b5c4c3c71164b2f0c3
 class App:
     def __init__(self,master):
         padding_x = 5

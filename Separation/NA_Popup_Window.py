@@ -42,14 +42,20 @@ class popupWindow(object):
 
         self.okay_button = Button(top,text = "OKAY", command = self.cleanup)
         self.okay_button.pack(anchor=S,side = BOTTOM,pady=padding_y+5)
+        self.err = StringVar()
+        self.error_bar = Message(top,textvariable = self.err,aspect=800).pack(anchor = S,pady=(15,5))
         self.enable_entry()
         top.bind('<Return>', lambda x: self.okay_button.invoke())
 
     def cleanup(self):
+        try:
+            offset = int(self.offset_entry.get())
+            xc1 = int(self.x1_entry.get())
+            yc1 = int(self.y1_entry.get())
+        except ValueError:
+            self.err.set("Must Enter Some Values")
+            return
 
-        offset = int(self.offset_entry.get())
-        xc1 = int(self.x1_entry.get())
-        yc1 = int(self.y1_entry.get())
         if self.mode == 4:
             xc2 = int(self.x2_entry.get())
             yc2 = int(self.y2_entry.get())

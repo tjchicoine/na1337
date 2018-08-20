@@ -32,7 +32,6 @@ class pypoweredfunctions(object):
 
         #Single Row
         if mode == '3':
-            print(mode)
             self.row(self.row1start,self.row1end,self.xc1,self.yc1,self.mode)
 
         #Double Row

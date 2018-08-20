@@ -25,7 +25,10 @@ class Main_Window:
         p1 = self.page1 = ttk.Frame(self.nb)
         self.nb.add(self.page1,text='Sequential Text')
         p2 = self.page2 = ttk.Frame(self.nb)
-        self.nb.add(self.page2,text='More Complicated Stuff')
+        self.nb.add(self.page2,text='Page Generation')
+        self.todolist = Message(p2,text = 'coming in future',justify=CENTER)
+        self.todolist.grid(rowspan=50,columnspan=50,ipadx=100,ipady=100,sticky='NESW')
+
 
         #-------------------------Radiobutton Introduction---------------------#
         self.mode_str = StringVar()
@@ -73,14 +76,16 @@ class Main_Window:
         self.row2text.config(state='disabled')
 
         #---------------------Sequential Number -------------------------------#
-        self.sequence1a_message = Message(p1,text = 'Row 1: Lowest -> Highest',aspect=900).grid(row=11,sticky='W')
+        self.sequence1a_message = Message(p1,text = 'Row 1: Lowest:',aspect=900).grid(row=11,sticky='W')
         self.sequence1a = Entry(p1)
         self.sequence1a.grid(row=11,column=1)
+        self.sequence1b_m = Message(p1,text = 'Row 1: Highest:',aspect = 900).grid(row = 12, sticky = 'w')
         self.sequence1b = Entry(p1)
         self.sequence1b.grid(row=12,column=1)
-        self.sequence2_message = Message(p1,text = 'Row 2: Lowest -> Highest',aspect=800).grid(row=13,sticky='W')
+        self.sequence2_message = Message(p1,text = 'Row 2: Lowest:',aspect=800).grid(row=13,sticky='W')
         self.sequence2a = Entry(p1)
         self.sequence2a.grid(row=13,column=1)
+        self.sequence2b_m = Message(p1,text = 'Row 2: Highest:', aspect=800).grid(row = 14,sticky = 'W')
         self.sequence2a.config(state='disabled')
         self.sequence2b = Entry(p1)
         self.sequence2b.grid(row=14,column=1)
@@ -97,6 +102,7 @@ class Main_Window:
         self.start_button.grid(row = 16,columnspan=50,pady=padding_y,ipadx=36)
         self.exit_button = Button(master,text = "Quit", command = master.destroy)
         self.exit_button.grid(columnspan=50,sticky = S+E+W,padx=padding_x,pady=padding_y)
+        master.bind('<Return>',lambda x: self.start_button.invoke())
         #---------------------Mode Selection----------------------#
 
     def mode_select(self):

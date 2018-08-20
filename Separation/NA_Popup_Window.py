@@ -52,22 +52,21 @@ class popupWindow(object):
             offset = int(self.offset_entry.get())
             xc1 = int(self.x1_entry.get())
             yc1 = int(self.y1_entry.get())
+            if self.mode == '4':
+                xc2 = int(self.x2_entry.get())
+                yc2 = int(self.y2_entry.get())
+            else:
+                xc2 = 0
+                yc2 = 0
+            if self.mode == '2':
+                width = int(self.width_entry.get())
+                height = int(self.height_entry.get())
+            else:
+                width = 0
+                height = 0
         except ValueError:
             self.err.set("Must Enter Some Values")
             return
-
-        if self.mode == 4:
-            xc2 = int(self.x2_entry.get())
-            yc2 = int(self.y2_entry.get())
-        else:
-            xc2 = 0
-            yc2 = 0
-        if self.mode == 2:
-            width = int(self.width_entry.get())
-            height = int(self.height_entry.get())
-        else:
-            width = 0
-            height = 0
 
         self.coordinates = [offset,xc1,yc1,xc2,yc2,width,height]
         print(self.coordinates)

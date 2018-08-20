@@ -6,7 +6,7 @@ class popupWindow(object):
         top.title("Coordinates")
         padding_x = 10
         padding_y = 2
-        self.mode = mode
+        self.mode = str(mode.get())
 
         self.offset_m = Message(top,text = 'Input Offset:',aspect=500,justify=LEFT).pack(anchor = CENTER,pady=padding_y)
         self.offset_entry = Entry(top)
@@ -75,8 +75,8 @@ class popupWindow(object):
 
     def enable_entry(self):
         if(self.mode == '2'):
-            width_entry.config(state = 'normal')
-            height_entry.config(state = 'normal')
+            self.width_entry.config(state = 'normal')
+            self.height_entry.config(state = 'normal')
         if(self.mode == '4'):
-            x2_entry.config(state='normal')
-            y2_entry.config(state='normal')
+            self.x2_entry.config(state='normal')
+            self.y2_entry.config(state='normal')

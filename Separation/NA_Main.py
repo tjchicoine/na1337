@@ -159,7 +159,7 @@ class Main_Window:
             try:
                 row1start = int(self.sequence1a.get())
                 row1end = int(self.sequence1b.get())
-                if mode == '4'
+                if mode == '4':
                     row2start = int(self.sequence2a.get())
                     row2end = int(self.sequence2b.get())
             except ValueError:

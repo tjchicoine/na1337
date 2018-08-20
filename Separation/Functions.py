@@ -20,8 +20,7 @@ class pypoweredfunctions(object):
         self.mode = mode
         self.direction_string = direction
 
-        if mode != '2':
-            self.start()
+        self.start()
 
         #Numerical Increment
         if mode == '1':
@@ -29,7 +28,6 @@ class pypoweredfunctions(object):
 
         #List of Tags
         if mode == '2':
-            self.start()
             self.Tag_Names(taglist)
 
         #Single Row

@@ -61,7 +61,8 @@ class Main_Window:
         self.display_path_Label = Label(p1,textvariable = self.display_path_string,bg = '#fff')
         self.display_path_Label.grid(row = 7, column = 2,ipadx = 20)
         #--------------------------Prefixes------------------------------------#
-        self.line = Message(p1,text = '============',aspect = 500, justify = CENTER).grid(row=8,columnspan=50)
+        self.s = ttk.Separator(p1,orient='horizontal')
+        self.s.grid(columnspan=50,sticky=E+W,padx=10,pady=10)
         self.row1text_message = Message(p1,text = 'Row 1 Prefix',aspect=300,justify = CENTER).grid(row=9,sticky='W')
         self.row1text = Entry(p1)
         self.row1text.grid(row=9,column=1)
@@ -150,35 +151,28 @@ class Main_Window:
         coordinates = self.coordinates
         row1prefix = self.row1text.get()
         row2prefix = self.row2text.get()
-        row1start = 0
-        row1end = 0
-        row2start = 0
-        row2end = 0
-
-        if (self.sequence1a.get()).isdigit() and (self.sequence1b.get()).isdigit():
-            row1start = int(self.sequence1a.get())
-            row1end = int(self.sequence1b.get())
-            if row1end==0:
-                self.display_error_string.set('Row End Cannot be 0')
-        else: self.display_error_string.set('Please Set Values')
+        row1start=0
+        row2start=0
+        row1end=0
+        row2end=0
+        if mode != 2:
+            try:
+                row1start = int(self.sequence1a.get())
+                row1end = int(self.sequence1b.get())
+                if mode == '4'
+                    row2start = int(self.sequence2a.get())
+                    row2end = int(self.sequence2b.get())
+            except ValueError:
+                self.display_error_string.set('Problem with your entries')
+                return
 
         if mode == '2':
             taglist = self.list_create()
         else: taglist = []
 
-        if mode=='4':
-            if (self.sequence2a.get()).isdigit() and (self.sequence2b.get()).isdigit():
-                row2start = int(self.sequence2a.get())
-                row2end = int(self.sequence2b.get())
-                if row2end==0:
-                    self.display_error_string.set('Row End Cannot be 0')
-            else: self.display_error_string.set('Please Set Values')
-
         entries = [row1prefix,row2prefix,row1start,row1end,row2start,row2end]
 
         runner = pypoweredfunctions(coordinates,entries,mode,direction,*taglist)
-
-
 
     def list_create(self):
         path = self.display_path_string.get()

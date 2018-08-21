@@ -6,8 +6,8 @@ class pypoweredfunctions(object):
     def __init__(self,coordinates,entries,mode,direction,*taglist):
         self.offset = coordinates[0]
         self.xc1 = coordinates[1]
-        self.xc2 = coordinates[2]
-        self.yc1 = coordinates[3]
+        self.yc1 = coordinates[2]
+        self.xc2 = coordinates[3]
         self.yc2 = coordinates[4]
         self.width = coordinates[5]
         self.height = coordinates[6]
@@ -47,7 +47,7 @@ class pypoweredfunctions(object):
             if mode == '1':
                 passval = x
             elif mode == '3':
-                passval = (self.row1text + str(x))
+                passval = (self.row1prefix + str(x))
             self.text_writer(passval,xval,yval)
             yval = self.direction(yval)
 

@@ -3,6 +3,7 @@ from tkinter import ttk
 import time
 from Functions import pypoweredfunctions
 from NA_Popup_Window import popupWindow
+from Text_Settings import Text_Settings
 
 class Main_Window:
     def __init__(self,master):
@@ -93,13 +94,15 @@ class Main_Window:
 
         #----------------OPEN POPUP TO SET COORDINATES-------------------------#
         self.coordinate_button = Button(p1,text = 'Initial Coordinates',command = self.popup)
-        self.coordinate_button.grid(row=16,columnspan=50,pady=padding_y)
+        self.coordinate_button.grid(row=16,sticky='EW',column = 0,padx=padding_x,pady=padding_y)
+        self.ts_b = Button(p1,text = 'Text Settings', command = self.tspopup)
+        self.ts_b.grid(row=16,sticky='EW',column = 1,padx=padding_x,pady=padding_y)
 
         self.display_error_string = StringVar()
         self.display_error = Label(master,textvariable=self.display_error_string)
         self.display_error.grid(sticky = 'S')
         self.start_button = Button(p1,text = "Start",command = self.start_button_onclick)
-        self.start_button.grid(row = 17,columnspan=50,pady=padding_y,ipadx=36)
+        self.start_button.grid(row = 17,columnspan = 50,sticky='EW',padx=padding_x,pady=padding_y)
         self.exit_button = Button(master,text = "Quit", command = master.destroy)
         self.exit_button.grid(columnspan=50,sticky = S+E+W,padx=padding_x,pady=padding_y)
         master.bind('<Return>',lambda x: self.start_button.invoke())
@@ -149,6 +152,12 @@ class Main_Window:
         self.master.wait_window(w.top)
         self.coordinate_button['state'] = 'normal'
         self.coordinates = w.coordinates
+
+    def tspopup(self):
+        w = Text_Settings(self.master)
+        self.ts_b['state'] = 'disabled'
+        self.master.wait_window(w.tx)
+        self.ts_b['state'] = 'normal'
 
 #---------------Start Button and stuff that happens after click----------------#
     def start_button_onclick(self):

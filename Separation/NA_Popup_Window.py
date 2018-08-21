@@ -49,7 +49,7 @@ class popupWindow(object):
 
     def cleanup(self):
         try:
-            offset = int(self.offset_entry.get())
+            offset = float(self.offset_entry.get())
             xc1 = int(self.x1_entry.get())
             yc1 = int(self.y1_entry.get())
             if self.mode == '4':
